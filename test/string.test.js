@@ -108,6 +108,16 @@ module.exports.test = function (setup, implType) {
         deepStrictEqual(body, { data: { createBook: null } })
       })
 
+      it('should pass with null', async function () {
+        const { body, statusCode } = await this.request
+          .post('/graphql')
+          .set('Accept', 'application/json')
+          .send({ query, variables: { input: { title: null } } })
+
+        strictEqual(statusCode, 200)
+        deepStrictEqual(body, { data: { createBook: null } })
+      })
+
       it('should fail', async function () {
         const { body, statusCode } = await this.request
           .post('/graphql')
@@ -1282,7 +1292,7 @@ module.exports.test = function (setup, implType) {
         })
 
         it('should pass', async function () {
-          const mockData = [{ title: 'fo' }, { title: 'foo' }, { title: 'bar' }]
+          const mockData = [{ title: 'fo' }, { title: 'foo' }, { title: 'bar' }, { title: null }]
           const request = await setup({ typeDefs: this.typeDefs, formatError, resolvers: resolvers(mockData) })
           const { body, statusCode } = await request
             .post('/graphql')
